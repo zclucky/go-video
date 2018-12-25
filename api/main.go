@@ -6,6 +6,23 @@ import (
 	"net/http"
 )
 
+type middleWareHandler struct {
+	r *httprouter.Router
+}
+
+func NewMiddleWareHandler(r *httprouter.Router) http.Handler {
+	m := middleWareHandler{}
+	m.r = r
+	return m
+}
+
+func (m middleWareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// check session
+	validateUserSession(r)
+
+	m.r.ServeHTTP(w, r)
+}
+
 /**
 	路由注册器，所有路由都在此注册
  */
@@ -23,10 +40,7 @@ func RegisterHandlers() *httprouter.Router {
 
 func main() {
 	r := RegisterHandlers()
+	mh := NewMiddleWareHandler(r)
 	log.Println("server start at : 8000")
-	err := http.ListenAndServe(":8000", r)
-	if err != nil {
-		panic("服务启动失败!")
-	}
+	log.Fatal(http.ListenAndServe(":8000", mh))
 }
-

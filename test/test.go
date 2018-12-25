@@ -1,30 +1,22 @@
 package main
-
 import (
+	"encoding/json"
 	"fmt"
-	"reflect"
-	"runtime"
-	"strconv"
-	"time"
+	"os"
 )
-
-var a int
-
-func main(){
-	fmt.Println(time.Now(),reflect.TypeOf(time.Now()))
-	fmt.Println(time.Now().UnixNano()/1000000000,reflect.TypeOf(time.Now().UnixNano()/1000000000))
-	fmt.Println(strconv.FormatInt(time.Now().UnixNano()/1000000000, 10),reflect.TypeOf(strconv.FormatInt(time.Now().UnixNano()/1000000000, 10)))
-	a,_ := strconv.Atoi(strconv.FormatInt(time.Now().UnixNano()/1000000000, 10))
-	fmt.Println(a,reflect.TypeOf(a))
-
-	fmt.Println(runtime.Compiler, runtime.GOARCH, runtime.GOOS)
-	fmt.Println(strconv.IntSize)
-}
-
-func test1(){
-	a = 10
-}
-
-func test2() int {
-	return a
+func main ( ) {
+	type UserCredential struct {
+		Username string `json:"user_name"`
+		Password string `json:"password"`
+	}
+	group := ColorGroup {
+		ID :     1 ,
+		Name :   "Reds" ,
+		Colors : [ ] string { "Crimson" , "Red" , "Ruby" , "Maroon" } ,
+	}
+	b , err := json. Marshal ( group )
+	if err != nil {
+		fmt. Println ( "error:" , err )
+	}
+	os. Stdout . Write ( b )
 }
